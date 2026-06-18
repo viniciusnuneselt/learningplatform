@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate" />
+    <title>vınıcıusnuneselt⋯ - Learning Platform</title>
+    <meta name="description" content="Learn with interactive games, activities, and vocabulary builder">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/viniciusnuneselt/viniciusnuneselt/refs/heads/main/%5BLOGO%5D%20viniciusnuneselt%20white%20bg.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Red+Hat+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#4F46E5",
+                        secondary: "#10B981",
+                        accent: "#F59E0B",
+                        brand: "#001f5b",
+                        dark: "#1F2937",
+                        light: "#F9FAFB"
+                    },
+                    fontFamily: {
+                        'heading': ['"Red Hat Display"', 'sans-serif'],
+                        'body': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #c9e2fc 0%, #a8d4f5 50%, #85c3f0 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+        .login-container { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 font-body flex flex-col">
+    <div id="login-page" class="min-h-screen flex flex-col items-center justify-center gradient-bg p-4 transition-opacity duration-500">
+        <div class="login-container rounded-2xl shadow-2xl p-8 md:p-12 w-full max-w-md">
+            <div class="text-center mb-10">
+                <div class="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white shadow-md bg-gray-50">
+                    <img src="https://raw.githubusercontent.com/viniciusnuneselt/viniciusnuneselt/refs/heads/main/%5BLOGO%5D%20viniciusnuneselt.png" alt="viniciusnuneselt Logo" class="w-full h-full object-cover">
+                </div>
+                <p class="text-gray-600 font-bold tracking-wide uppercase text-sm mb-6">Learning Platform</p>
+                <p class="text-gray-500 text-sm">Find your fluency through your own voice!</p>
+            </div>
+
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition text-center text-lg" placeholder="Enter your password">
+                </div>
+
+                <button type="submit" class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md">
+                    Start Learning
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-platform" class="hidden flex-grow flex flex-col">
+        <header class="bg-white shadow-md sticky top-0 z-10">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-lg overflow-hidden shadow-sm border border-gray-100 bg-gray-50 flex-shrink-0">
+                            <img src="https://raw.githubusercontent.com/viniciusnuneselt/viniciusnuneselt/refs/heads/main/%5BLOGO%5D%20viniciusnuneselt.png" alt="viniciusnuneselt Logo" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h1 class="text-xl md:text-2xl font-heading font-bold text-brand leading-none tracking-tight mb-1">vınıcıusnuneselt⋯</h1>
+                            <p class="text-xs text-gray-500 font-medium">Learning Platform</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-3 bg-gray-100 rounded-full px-4 py-2">
+                            <div class="text-right hidden sm:block">
+                                <p class="font-medium text-sm text-brand" id="student-name">Welcome, Student!</p>
+                            </div>
+                            <button id="logout-btn" class="text-gray-500 hover:text-red-500 ml-1 transition" title="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="bg-gray-50 border-t border-b">
+                <div class="container mx-auto px-4">
+                    <ul id="nav-menu" class="flex overflow-x-auto py-2 space-x-1"></ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="container mx-auto px-4 py-8 flex-grow" id="content-area"></main>
+
+        <footer class="bg-white border-t py-6 mt-auto">
+            <div class="container mx-auto px-4">
+                <div class="text-center text-gray-500 text-sm">
+                    <p>© 2026 Vinícius Nunes. Designed for interactive English language learning.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ========== SHA-256 HASHING ==========
+        async function sha256(message) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(message);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+
+        // ========== STUDENT PROFILES (ALL 6 STUDENTS) ==========
+        const STUDENT_PROFILES = {
+            // Leila (password: leila20261)
+            "6f48ee2dfe91cc7929a2c9082bf17e75e50a8ec7146eb913e4c09689eacf5dd9": {
+                name: "Leila"
+            },
+            // Elda (password: elda20261)
+            "f50c49c0abca43b90675fd1a03991d2a05e8e4cb75e8c67f5ee489fedcabc4e0": {
+                name: "Elda"
+            },
+            // Ana Karolina
+            "d20a7d0044b4a33dfee7ad8f819981d640325fe5369646b233ad80db3693becc": {
+                name: "Ana Karolina"
+            },
+            // Ana Lopes
+            "f5df4f279e2b9878ba2a61098e69079eab5d16a9bb84ee4569ebb94f8eb76ec0": {
+                name: "Ana Lopes"
+            },
+            // Julio Raiol
+            "96b36f536ecac4679c37187582636807e7e95dc5771983e66bacc50c46055929": {
+                name: "Julio Raiol"
+            },
+            // Vinícius Nunes
+            "8d64aa8d019d8627b306b730dcea29ceae3ed071209f9e82f4af73ee986d306e": {
+                name: "Vinícius Nunes"
+            }
+        };
+
+        let currentStudentProfile = null;
+        let currentStudentHash = null;
+
+        // ========== GLOBAL DATA ==========
+        const navItems = [
+            { "id": "games", "label": "Interactive Resources", "icon": "fas fa-gamepad", "active": true }
+        ];
+
+        const games = [
+            {
+                "id": "sound-leap",
+                "title": "Sound Leap",
+                "description": "Help the frog leap onto the pads that contain the same sound!",
+                "category": "Pronunciation",
+                "difficulty": "All Levels",
+                "themeClass": { badgeBg: "bg-green-100", badgeText: "text-green-700", btnBg: "bg-secondary", btnHover: "hover:bg-green-600" },
+                "image": "https://raw.githubusercontent.com/notviniciuss-arch/frogpronunciation/refs/heads/main/sound-leap-cover.png",
+                "url": "https://notviniciuss-arch.github.io/frogpronunciation/"
+            },
+            {
+                "id": "preposition-maze",
+                "title": "Preposition Maze",
+                "description": "Escape the monsters of time with the magical preposition spheres.",
+                "category": "Grammar",
+                "difficulty": "All Levels",
+                "themeClass": { badgeBg: "bg-blue-100", badgeText: "text-blue-700", btnBg: "bg-primary", btnHover: "hover:bg-indigo-600" },
+                "image": "https://raw.githubusercontent.com/notviniciuss-arch/magetime/refs/heads/main/game-cover2.png",
+                "url": "https://notviniciuss-arch.github.io/magetime/"
+            },
+            {
+                "id": "alphabet-lab",
+                "title": "Alphabet Lab",
+                "description": "Discover the alphabet with fun vocabulary exercises.",
+                "category": "Vocabulary",
+                "difficulty": "All Levels",
+                "themeClass": { badgeBg: "bg-orange-100", badgeText: "text-orange-700", btnBg: "bg-accent", btnHover: "hover:bg-yellow-600" },
+                "image": "https://cdn.pixabay.com/photo/2018/08/25/04/27/blocks-3629359_1280.jpg",
+                "url": "https://viniciusnuneselt.github.io/alphabetlab/"
+            }
+        ];
+
+        // ========== RENDER FUNCTIONS ==========
+        function renderNavMenu() {
+            return navItems.map(item => {
+                const activeClass = item.active ? "bg-primary text-white" : "text-gray-700 hover:bg-gray-100";
+                return `<li class="flex-shrink-0"><a href="#" data-nav="${item.id}" class="${activeClass} flex items-center px-5 py-2 rounded-lg transition-all duration-200 font-medium"><i class="${item.icon} mr-2"></i><span>${item.label}</span></a></li>`;
+            }).join("");
+        }
+
+        function renderGames() {
+            return `
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-dark mb-6 flex items-center"><i class="fas fa-gamepad text-primary mr-3"></i>Interactive Resources</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${games.map(game => `
+                            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover border border-gray-100 flex flex-col">
+                                <img src="${game.image}" alt="${game.title}" class="w-full h-48 object-cover">
+                                <div class="p-5 flex flex-col flex-grow">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-bold text-xl">${game.title}</h4>
+                                    </div>
+                                    <p class="text-gray-600 text-sm mb-4 flex-grow">${game.description}</p>
+                                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-gray-50">
+                                        <div class="flex space-x-2">
+                                            <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">${game.difficulty}</span>
+                                            <span class="text-xs font-medium ${game.themeClass.badgeBg} ${game.themeClass.badgeText} px-2 py-1 rounded">${game.category}</span>
+                                        </div>
+                                        <a href="${game.url}" target="_blank" rel="noopener noreferrer" class="${game.themeClass.btnBg} text-white px-4 py-2 rounded-lg ${game.themeClass.btnHover} transition text-sm font-medium flex items-center">
+                                            Play <i class="fas fa-external-link-alt ml-2 text-xs"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========== NAVIGATION ==========
+        window.loadContent = function(pageId) {
+            const contentArea = document.getElementById("content-area");
+            if (pageId === "games") {
+                contentArea.innerHTML = renderGames();
+            }
+            // Update active class on navigation links
+            document.querySelectorAll("#nav-menu a[data-nav]").forEach(link => {
+                const navVal = link.getAttribute("data-nav");
+                link.classList.remove("bg-primary", "text-white");
+                link.classList.add("text-gray-700", "hover:bg-gray-100");
+                if (navVal === pageId) {
+                    link.classList.remove("text-gray-700", "hover:bg-gray-100");
+                    link.classList.add("bg-primary", "text-white");
+                }
+            });
+        };
+
+        // ========== LOGIN LOGIC WITH FADE EFFECT ==========
+        document.getElementById("login-form").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const password = document.getElementById("password").value;
+
+            if (!password) {
+                alert("Please enter the password.");
+                return;
+            }
+
+            const enteredHash = await sha256(password);
+
+            if (STUDENT_PROFILES[enteredHash]) {
+                currentStudentProfile = STUDENT_PROFILES[enteredHash];
+                currentStudentHash = enteredHash;
+
+                document.getElementById("student-name").textContent =
+                    `Welcome, ${currentStudentProfile.name}!`;
+
+                const loginPage = document.getElementById("login-page");
+                // Fade out
+                loginPage.style.opacity = "0";
+                
+                setTimeout(() => {
+                    loginPage.classList.add("hidden");
+                    loginPage.style.opacity = ""; // reset for next login
+                    document.getElementById("main-platform").classList.remove("hidden");
+                    document.getElementById("nav-menu").innerHTML = renderNavMenu();
+                    loadContent("games");
+                }, 500);
+            } else {
+                alert("Incorrect password. Please try again.");
+            }
+        });
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            currentStudentProfile = null;
+            currentStudentHash = null;
+            const loginPage = document.getElementById("login-page");
+            const mainPlatform = document.getElementById("main-platform");
+            
+            mainPlatform.classList.add("hidden");
+            loginPage.classList.remove("hidden");
+            // Reset opacity so it fades in fresh next time
+            loginPage.style.opacity = "";
+            document.getElementById("password").value = "";
+        });
+
+        document.addEventListener("click", (e) => {
+            const navLink = e.target.closest("#nav-menu a");
+            if (navLink && navLink.getAttribute("data-nav")) {
+                e.preventDefault();
+                loadContent(navLink.getAttribute("data-nav"));
+            }
+        });
+
+        // ========== PROTECTION LAYER (DISABLE RIGHT-CLICK & DEV TOOLS SHORTCUTS) ==========
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // F12
+            if (e.keyCode === 123) {
+                e.preventDefault();
+            }
+            // Ctrl+Shift+I or Ctrl+Shift+J
+            if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) {
+                e.preventDefault();
+            }
+            // Ctrl+U
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+            }
+            // Optional: Ctrl+S (Save) — uncomment if needed
+            // if (e.ctrlKey && e.keyCode === 83) {
+            //     e.preventDefault();
+            // }
+        });
+    </script>
+</body>
+</html>
